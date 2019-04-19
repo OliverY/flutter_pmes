@@ -11,6 +11,7 @@ import 'package:PMES/utils/log.dart';
 import 'package:PMES/widget/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -100,34 +101,31 @@ class _HomePageState extends State<HomePage> {
 
   _logging(BuildContext context)async{
 
-//    String barcode = await BarcodeScanner.scan();
-//    print('good:$barcode');
+    String barcode = await BarcodeScanner.scan();
+    print('good:$barcode');
 
-    // 调用网络
+    if(barcode == null){
+      Fluttertoast.showToast(msg: "二维码扫描失败，请重试");
+    }else{
+      // 调用网络
+      Stream.fromFuture(NetUtils.instance.get(API_URL.GET_DEVICE_INFO_BY_SCAN, {"barcode":barcode}))
+          .listen((future) async{
+        String data = await future;
+        Map<String,dynamic> map = json.decode(data);
+        Log.e("map::$map");
+        EquipmentBean equipmentBean = EquipmentBean.fromJson(map['data']);
 
-    Stream.fromFuture(Future.delayed(Duration(seconds: 2),()=>"1107-001001190417001"))
-    .map((barcode){
-      Future<String> future = NetUtils.instance.get(API_URL.GET_DEVICE_INFO_BY_SCAN, {"barcode":barcode});
-      return future;
-    })
-    .listen((future) async{
-      String data = await future;
-      Map<String,dynamic> map = json.decode(data);
-      Log.e("map::$map");
-      EquipmentBean equipmentBean = EquipmentBean.fromJson(map['data']);
+        Log.e("equipmentBean::$equipmentBean");
 
-      Log.e("equipmentBean::$equipmentBean");
+        Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
+          return ScheduleLoggingPage(equipmentBean);
+        }));
 
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
-        return ScheduleLoggingPage(equipmentBean);
-      }));
-
-    });
-
+      });
+    }
   }
 
-  
-  
+
   _showProductProgress(BuildContext context){
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
       return ScheduleProgressPage();

@@ -149,7 +149,7 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(value,style:TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color:Color(0XFF999999))),
+                  Text(value,style:TextStyle(fontSize: 16,fontWeight: FontWeight.w500,color:Color(0XFF666666))),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(21,0,0,0),
                     child: Icon(Icons.expand_more),
@@ -165,19 +165,27 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
 
   _chooseStage(context){
     showModalBottomSheet(context: context, builder:(ctx){
-        return Container(
-          padding: const EdgeInsets.all(0),
-          child: ListView.separated(
-              itemBuilder: (ctx,index)=>_buildChooseStageItem(_stageList[index]),
-              separatorBuilder: (ctx,index)=>Divider(height: 1,),
-              itemCount: _stageList.length
-          )
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: _buildChooseLayout(),
         );
       }
     );
   }
 
-  _buildChooseStageItem(ConfigBean config){
+  List<Widget> _buildChooseLayout(){
+    return _stageList.map((config){
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          _buildChooseStageItem(config),
+          Divider(height:1),
+        ],
+      );
+    }).toList();
+  }
+
+  Widget _buildChooseStageItem(ConfigBean config){
     return InkWell(
       onTap: (){
         setState(() {
@@ -188,8 +196,8 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
       child: Container(
         height: 54,
         child: Center(
-          child: Text(
-              config.describe
+          child:Text(
+            config.describe
           ),
         ),
       ),
