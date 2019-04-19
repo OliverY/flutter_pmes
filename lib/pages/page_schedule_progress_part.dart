@@ -18,7 +18,8 @@ class ScheduleList extends StatefulWidget {
   ScheduleListState createState() => new ScheduleListState();
 }
 
-class ScheduleListState extends State<ScheduleList> {
+class ScheduleListState extends State<ScheduleList>
+with AutomaticKeepAliveClientMixin{
 
   String _errorMsg;
   bool isLoading = true;
@@ -106,4 +107,8 @@ class ScheduleListState extends State<ScheduleList> {
     });
     return null;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
