@@ -7,6 +7,7 @@ import 'package:PMES/net/net_utils.dart';
 import 'package:PMES/net/response_bean.dart';
 import 'package:PMES/pages/page_schedule_logging.dart';
 import 'package:PMES/pages/page_schedule_progress.dart';
+import 'package:PMES/utils/dialog_utils.dart';
 import 'package:PMES/utils/log.dart';
 import 'package:PMES/widget/app_bar.dart';
 import 'package:flutter/material.dart';
@@ -108,6 +109,8 @@ class _HomePageState extends State<HomePage> {
       Fluttertoast.showToast(msg: "二维码扫描失败，请重试");
     }else{
       // 调用网络
+      DialogUtils.showLoading(context,"获取信息中...");
+
       Stream.fromFuture(NetUtils.instance.get(API_URL.GET_DEVICE_INFO_BY_SCAN, {"barcode":barcode}))
           .listen((future) async{
         String data = await future;
@@ -117,6 +120,7 @@ class _HomePageState extends State<HomePage> {
 
         Log.e("equipmentBean::$equipmentBean");
 
+        Navigator.pop(context);
         Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
           return ScheduleLoggingPage(equipmentBean);
         }));

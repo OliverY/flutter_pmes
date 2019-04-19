@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:PMES/net/net_constants.dart';
 import 'package:PMES/net/net_utils.dart';
 import 'package:PMES/pages/page_home.dart';
+import 'package:PMES/utils/dialog_utils.dart';
 import 'package:PMES/utils/log.dart';
+import 'package:PMES/widget/dialog_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,8 +28,6 @@ class _LoginPageState extends State<LoginPage> {
 
   TextEditingController _emailEditingController;
   TextEditingController _passwordEditingController;
-
-  bool _isLogining = false;
 
   @override
   void initState() {
@@ -53,14 +53,8 @@ class _LoginPageState extends State<LoginPage> {
         title: new Text('LoginPage'),
       ),
       body: Container(
-        child: _isLogining?_buildLoading():_buildMainLayout(),
+        child: _buildMainLayout(),
       ),
-    );
-  }
-
-  _buildLoading(){
-    return Center(
-      child: CircularProgressIndicator(),
     );
   }
 
@@ -112,14 +106,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   getHttp(String email,String password) async{
-    setState(() {
-      _isLogining = true;
-    });
+    DialogUtils.showLoading(context,"登录中...");
     NetUtils.instance.get(API_URL.PHONE_LOGIN, {"email":email,"password":password})
     .then((response){
-      setState(() {
-        _isLogining = false;
-      });
+      Navigator.pop(context);
       if(response != null){
         Map<String,dynamic> map = json.decode(response.toString());
         if(map['success']){
@@ -134,9 +124,7 @@ class _LoginPageState extends State<LoginPage> {
 
     },onError:(e){
       Log.e(e);
-      setState(() {
-        _isLogining = false;
-      });
+      Navigator.pop(context);
       Fluttertoast.showToast(msg: "网络访问出错");
     });
 

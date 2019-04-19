@@ -5,6 +5,7 @@ import 'package:PMES/config/config.dart';
 import 'package:PMES/net/net_constants.dart';
 import 'package:PMES/net/net_utils.dart';
 import 'package:PMES/net/response_bean.dart';
+import 'package:PMES/utils/dialog_utils.dart';
 import 'package:PMES/utils/log.dart';
 import 'package:PMES/widget/app_bar.dart';
 import 'package:flutter/material.dart';
@@ -213,6 +214,8 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
       return;
     }
 
+    DialogUtils.showLoading(context,"信息上传中...");
+
     Map<String,dynamic> params = {
       'barCode':widget._equipmentBean.barcode,
       'planOnwardStatus':_stage,
@@ -223,6 +226,7 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
 
     NetUtils.instance.post(API_URL.LOGGING_SCHEDULE,params)
       .then((response){
+        Navigator.pop(context);
         Log.e(response);
         ResponseBean responseBean = ResponseBean.fromJson(json.decode(response));
         if(responseBean.success){
@@ -231,6 +235,7 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
           Fluttertoast.showToast(msg: responseBean.msg);
         }
       },onError: (e){
+        Navigator.pop(context);
         Fluttertoast.showToast(msg:"网络出错");
       });
   }
