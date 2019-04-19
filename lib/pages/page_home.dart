@@ -93,8 +93,7 @@ class _HomePageState extends State<HomePage> {
       Map<String,dynamic> map = json.decode(value);
       ResponseBean responseBean = ResponseBean.fromJson(map);
       if(responseBean.success){
-        List<ConfigBean> configList = (responseBean.data as List).map((m)=>ConfigBean.fromJson(m)).toList();
-        Config.instance.configList = configList;
+        Config.instance.configList = responseBean.data;
       }
     });
   }

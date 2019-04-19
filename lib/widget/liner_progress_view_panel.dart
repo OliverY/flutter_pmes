@@ -82,11 +82,9 @@ class LinearProgressPainter extends CustomPainter {
   }
 
   _switchColor() {
-    if(progress>=0 && progress <= 30){
-      colorPaint.color = Color(0XFFF42323);
-    }else if(progress>30 && progress <= 60){
+    if(progress>=0 && progress <= 60){
       colorPaint.color = Color(0XFFFBDA59);
-    }else if(progress>60 && progress <= 100){
+    }else if(progress>90 && progress <= 100){
       colorPaint.color = Color(0XFF40CE94);
     }
   }

@@ -10,4 +10,6 @@ abstract class API_URL{
 
   static const String GET_CONFIG_INFO = BASE_URL + "/jszx/api/getConfigInfo"; //获取配置信息
 
+  static const String GET_PRODUCE_PLAN_PROCESS = BASE_URL + "/jszx/api/producePlanProcess"; //获取生产计划信息
+
 }

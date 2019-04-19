@@ -1,4 +1,5 @@
 import 'dart:io' show ContentType, Cookie, HttpHeaders;
+import 'package:PMES/utils/log.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 
@@ -33,6 +34,7 @@ class NetUtils{
             contentType: ContentType.parse("application/x-www-form-urlencode")
         )
     );
+    Log.e(response.toString());
     return response.toString();
   }
 

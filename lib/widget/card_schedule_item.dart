@@ -1,11 +1,21 @@
+import 'package:PMES/bean/scheduler.dart';
 import 'package:PMES/widget/circle_progress_view.dart';
 import 'package:PMES/widget/liner_progress_view_panel.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' show pi;
 
 class ScheduleCardItem extends StatelessWidget {
+
+  SchedulerBean schedulerBean;
+
+  ScheduleCardItem(this.schedulerBean);
+
+  int _progress;
+
   @override
   Widget build(BuildContext context) {
+
+    _progress = int.parse(schedulerBean.rate.replaceFirst("%", ""));
+
     return SizedBox(
       height: 270,
       child: Card(
@@ -34,7 +44,7 @@ class ScheduleCardItem extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(14,0,0,5),
-                    child: Text('开始时间：2019-04-16 15:34:57',style: TextStyle(fontSize: 14,color: Color(0XFF666666)),),
+                    child: Text('开始时间：${schedulerBean.startTime}',style: TextStyle(fontSize: 14,color: Color(0XFF666666)),),
                   )
                 ],
               )
@@ -51,7 +61,7 @@ class ScheduleCardItem extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(14.0,0,14,0),
                     child: Text('进度',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500),),
                   ),
-                  LinearProgress(24,90,EdgeInsets.fromLTRB(0, 0, 14, 0)),
+                  LinearProgress(24,_progress,EdgeInsets.fromLTRB(0, 0, 14, 0)),
                 ],
               ),
             );
@@ -64,10 +74,10 @@ class ScheduleCardItem extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    CircleProgressView(0xFF429FFF,150,150,"设备总数"),
-                    CircleProgressView(0xFF6D81FD,30,150,"模块安装"),
-                    CircleProgressView(0xFFA68FFE,90,150,"设备布线"),
-                    CircleProgressView(0xFF429FFF,0,150,"设备测试"),
+                    CircleProgressView(0xFF429FFF,schedulerBean.deviceNumber,schedulerBean.deviceNumber,"设备总数"),
+                    CircleProgressView(0xFF6D81FD,schedulerBean.moduleInstalled,schedulerBean.deviceNumber,"模块安装"),
+                    CircleProgressView(0xFFA68FFE,schedulerBean.deviceWired,schedulerBean.deviceNumber,"设备布线"),
+                    CircleProgressView(0xFF429FFF,schedulerBean.deviceTested,schedulerBean.deviceNumber,"设备测试"),
                   ],
                 ),
               ),
@@ -84,8 +94,8 @@ class ScheduleCardItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("安徽省儿童医院",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
-                    Text("诊间屏",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+                    Text(schedulerBean.projectName,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+                    Text(schedulerBean.deviceTypeDesc,style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
                   ],
                 ),
               ),

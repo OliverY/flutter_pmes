@@ -12,19 +12,33 @@ class Config{
     return _instance;
   }
 
-  List<ConfigBean> _configList;
+  ConfigLayout _configLayout;
 
-  set configList(List<ConfigBean> configList) => _configList = configList;
+  set configList(Map<String,dynamic> map) => _configLayout = ConfigLayout.fromJson(map);
 
   /**
    * 过程选项
    */
-  List<ConfigBean> get stages => List.from(_configList.where((config)=>config.typeId == 123));
+  List<ConfigBean> get stages => _configLayout.stageList;
 
   /**
    * 阶段
    */
-  List<ConfigBean> get progresses => List.from(_configList.where((config)=>config.typeId == 122));
+  List<ConfigBean> get progresses => _configLayout.progressList;
+
+}
+
+class ConfigLayout{
+
+  List<ConfigBean> _typeId_121;
+  List<ConfigBean> progressList; //阶段
+  List<ConfigBean> stageList; //过程选项
+
+  ConfigLayout.fromJson(Map<String,dynamic> map){
+    _typeId_121 = (map['typeId_121'] as List).map((e)=>ConfigBean.fromJson(e)).toList();
+    progressList = (map['typeId_122'] as List).map((e)=>ConfigBean.fromJson(e)).toList();
+    stageList = (map['typeId_123'] as List).map((e)=>ConfigBean.fromJson(e)).toList();
+  }
 
 }
 
