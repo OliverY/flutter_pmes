@@ -4,9 +4,11 @@ import 'package:PMES/bean/equipment.dart';
 import 'package:PMES/config/config.dart';
 import 'package:PMES/net/net_constants.dart';
 import 'package:PMES/net/net_utils.dart';
+import 'package:PMES/net/response_bean.dart';
 import 'package:PMES/utils/log.dart';
 import 'package:PMES/widget/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ScheduleLoggingPage extends StatefulWidget {
 
@@ -197,7 +199,8 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
         height: 54,
         child: Center(
           child:Text(
-            config.describe
+            config.describe,
+            style: TextStyle(color:_stage == config.id?Color(0XFF429FFF):Color(0XFF333333)),
           ),
         ),
       ),
@@ -205,6 +208,11 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
   }
 
   _sure(BuildContext context){
+    if(_stage == null) {
+      Fluttertoast.showToast(msg: "请选择阶段");
+      return;
+    }
+
     Map<String,dynamic> params = {
       'barCode':widget._equipmentBean.barcode,
       'planOnwardStatus':_stage,
@@ -216,10 +224,14 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
     NetUtils.instance.post(API_URL.LOGGING_SCHEDULE,params)
       .then((response){
         Log.e(response);
-      Map<String,dynamic> map = json.decode(response);
-      if(map['success']){
-        Navigator.pop(context);
-      }
-    });
+        ResponseBean responseBean = ResponseBean.fromJson(json.decode(response));
+        if(responseBean.success){
+          Navigator.pop(context);
+        }else{
+          Fluttertoast.showToast(msg: responseBean.msg);
+        }
+      },onError: (e){
+        Fluttertoast.showToast(msg:"网络出错");
+      });
   }
 }
