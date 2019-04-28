@@ -223,8 +223,9 @@ class ScheduleLoggingPageState extends State<ScheduleLoggingPage> {
       'projectId':widget._equipmentBean.hospitalId,
     };
     Log.e(params);
+    String paramsStr = json.encode(params);
 
-    NetUtils.instance.post(API_URL.LOGGING_SCHEDULE,params)
+    NetUtils.instance.post(API_URL.LOGGING_SCHEDULE,data:paramsStr)
       .then((response){
         Navigator.pop(context);
         Log.e(response);

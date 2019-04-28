@@ -38,12 +38,13 @@ class NetUtils{
     return response.toString();
   }
 
-  Future<String> post(String url,Map<String,dynamic> params)async{
+  Future<String> post(String url,{Map<String,dynamic> params,dynamic data})async{
     Response response = await dio.post(
       url,
+      data: data,
       queryParameters: params,
       options: Options(
-          contentType: ContentType.parse("application/json")
+          contentType: data != null?ContentType.parse("application/json"):ContentType.parse("application/x-www-form-urlencode")
       )
     );
     return response.toString();
